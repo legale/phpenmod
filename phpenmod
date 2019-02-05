@@ -46,7 +46,7 @@ get_priority() {
     return 1
   fi
 
-  local -i MAX=`ls $SCAN | cut -d - -f 1 | tail -n 1`
+  local -i MAX=`ls "$SCAN" | cut -d - -f 1 | tail -n 1`
   if [[ -z $MAX ]]; then
     declare -g -i "$1"=10
     return 1
@@ -124,9 +124,10 @@ get_ini_path() {
 
 make_scan_dir() {
   if ! [[ -d "$SCAN" ]]; then
-    OUT=`mkdir "$SCAN"`
+    # redirect stderr to stdout
+    OUT=`mkdir -p "$SCAN" 2>&1`
     if ! [[ -z "$OUT" ]]; then
-      log "$OUT"
+      log "$OUT" RED
       return 1
    fi
   fi
@@ -159,32 +160,32 @@ enmod() {
     return 1
   fi
 
-   module_is_enabled "$MODNAME" "INI_PATH"
-   case $? in
-    0)
-      log "PHP extension $MODNAME enabled already." GREEN
-      return 0
-    ;;
+  module_is_enabled "$MODNAME" "INI_PATH"
+  case $? in
+  0)
+    log "PHP extension $MODNAME enabled already." GREEN
+    return 0
+  ;;
 
-    1)
-      log "Trying to enable PHP extension $MODNAME..."
-      sed -i "s/^\;\(extension=${MODNAME}\)$/\1/" "$INI_PATH"
-    ;;
+  1)
+    log "Trying to enable PHP extension $MODNAME..."
+    sed -i "s/^\;\(extension=${MODNAME}\)$/\1/" "$INI_PATH"
+  ;;
 
-    2)
-      log "Incorrect ini file content. Trying to fix..."
-      echo -e "extension=$MODNAME\n" > "$INI_PATH"
-    ;;
+  2)
+    log "Incorrect ini file content. Trying to fix..."
+    echo -e "extension=$MODNAME\n" > "$INI_PATH"
+  ;;
 
-    3)
-      get_priority "NUM"
-      log "Ini file not found. Trying to create new..."
-      echo -e "extension=$MODNAME\n" > "${SCAN}/${NUM}-${MODNAME}.ini"
-    ;;
-    
-    4)
-      return 1
-    ;;
+  3)
+    get_priority "NUM"
+    log "Ini file not found. Trying to create new..."
+    echo -e "extension=$MODNAME\n" > "${SCAN}/${NUM}-${MODNAME}.ini"
+  ;;
+
+  4)
+    return 1
+  ;;
   esac
 
   if module_is_enabled "$MODNAME" "INI_PATH"; then
@@ -263,8 +264,10 @@ SCRIPT_NAME=${0##*/}
 
 # check if php is installed
 # redirect stderr to stdout
-if [[ -z `which php 2>\&1` ]]; then
-  log "PHP is not installed"
+OUT=`exec which phpddd 2>&1`
+if [[ -z "$OUT" ]]; then
+  log "$OUT"
+  log "PHP is not installed" RED
   exit 1
 fi
 
