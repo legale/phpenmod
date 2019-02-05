@@ -264,7 +264,7 @@ SCRIPT_NAME=${0##*/}
 
 # check if php is installed
 # redirect stderr to stdout
-OUT=`exec which phpddd 2>&1`
+OUT=`exec which php 2>&1`
 if [[ -z "$OUT" ]]; then
   log "$OUT"
   log "PHP is not installed" RED
