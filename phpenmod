@@ -262,7 +262,8 @@ dismod() {
 SCRIPT_NAME=${0##*/}
 
 # check if php is installed
-if [[ -z `which php` ]]; then
+# redirect stderr to stdout
+if [[ -z `which php 2>\&1` ]]; then
   log "PHP is not installed"
   exit 1
 fi
