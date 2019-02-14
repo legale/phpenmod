@@ -273,8 +273,8 @@ fi
 
 # read PHP parameters
 PARAMS=`php -i | grep --color \
-       -e "extension_dir =>" \
-       -e "Scan this dir for additional .ini files =>" \
+       -e "^extension_dir =>" \
+       -e "^Scan this dir for additional .ini files =>" \
        `
 
 # parse parameters to variables SCAN and EXTENSION_DIR
@@ -285,6 +285,8 @@ while read -r line; do
   sed 's/^.* => \(.*\).*$/\1/'`
 done <<< $PARAMS
 
+# check if Scan this dir for additional .ini files is not empty
+[[ SCAN != "(none)" ]] && echo -e "please build with ./configure --with-config-file-scan-dir=PATH\n" && exit 1
 
 # integer return value variable
 declare -i RETVAL=0
