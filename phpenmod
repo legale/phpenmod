@@ -262,9 +262,11 @@ dismod() {
 ################################################################################
 SCRIPT_NAME=${0##*/}
 
+PHP_BIN=${PHP_BIN:-php}
+
 # check if php is installed
 # redirect stderr to stdout
-OUT=`exec which php 2>&1`
+OUT=`exec which $PHP_BIN 2>&1`
 if [[ -z "$OUT" ]]; then
   log "$OUT"
   log "PHP is not installed" RED
@@ -272,7 +274,7 @@ if [[ -z "$OUT" ]]; then
 fi
 
 # read PHP parameters
-PARAMS=`php -i | grep --color \
+PARAMS=`$PHP_BIN -i | grep --color \
        -e "^extension_dir =>" \
        -e "^Scan this dir for additional .ini files =>" \
        `
@@ -286,7 +288,7 @@ while read -r line; do
 done <<< $PARAMS
 
 # check if Scan this dir for additional .ini files is not empty
-[[ SCAN != "(none)" ]] && echo -e "please build with ./configure --with-config-file-scan-dir=PATH\n" && exit 1
+[[ $SCAN == "(none)" ]] && echo -e "please build with ./configure --with-config-file-scan-dir=PATH\n" && exit 1
 
 # integer return value variable
 declare -i RETVAL=0

@@ -23,10 +23,12 @@ make -j4 && sudo make install
 ```
 
 ### Extension installation
+```
 cd ~/src/php-src/ext/readline
 phpize && ./configure && make -j4 && sudo make install
 cd ~/src/php-src/ext/mbstring
 phpize && ./configure && make -j4 && sudo make install
+```
 
 ### phpenmod installation
 ```
@@ -47,6 +49,12 @@ phpenmod: Ini file not found. Trying to create new...
 phpenmod: Done.
 phpenmod: Ini file not found. Trying to create new...
 phpenmod: Done.
+```
+
+#### Use with a different PHP version
+```
+[ru@ru-manjaro php.d]$ export PHP_BIN=php81
+[ru@ru-manjaro php.d]$ phpenmod readline mbstring
 ```
 
 #### Listing scan directory
