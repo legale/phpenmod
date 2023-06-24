@@ -51,6 +51,12 @@ phpenmod: Ini file not found. Trying to create new...
 phpenmod: Done.
 ```
 
+#### Use with a different PHP version
+```
+[ru@ru-manjaro php.d]$ export PHP_BIN=php81
+[ru@ru-manjaro php.d]$ phpenmod readline mbstring
+```
+
 #### Listing scan directory
 ```
 ls /etc/php/php.d/
