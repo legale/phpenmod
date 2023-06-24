@@ -23,10 +23,12 @@ make -j4 && sudo make install
 ```
 
 ### Extension installation
+```
 cd ~/src/php-src/ext/readline
 phpize && ./configure && make -j4 && sudo make install
 cd ~/src/php-src/ext/mbstring
 phpize && ./configure && make -j4 && sudo make install
+```
 
 ### phpenmod installation
 ```
