@@ -288,7 +288,7 @@ while read -r line; do
 done <<< $PARAMS
 
 # check if Scan this dir for additional .ini files is not empty
-[[ SCAN != "(none)" ]] && echo -e "please build with ./configure --with-config-file-scan-dir=PATH\n" && exit 1
+[[ $SCAN == "(none)" ]] && echo -e "please build with ./configure --with-config-file-scan-dir=PATH\n" && exit 1
 
 # integer return value variable
 declare -i RETVAL=0
