@@ -77,9 +77,9 @@ module_is_enabled() {
   get_ini_path "$MODNAME" "$_INI_PATH"
   case $? in
     0)
-      if grep -iq -e "^extension=${MODNAME}$" "$INI_PATH"; then
+      if grep -iq -e "^\(zend_\|\)\?extension=${MODNAME}\(.*\)\?$" "$INI_PATH"; then
         return 0
-      elif grep -iq -e "^;extension=${MODNAME}$" "$INI_PATH"; then
+      elif grep -iq -e "^;\(zend_\|\)\?extension=${MODNAME}\(.*\)\?$" "$INI_PATH"; then
         return 1
       else
         return 2
@@ -169,12 +169,11 @@ enmod() {
 
   1)
     log "Trying to enable PHP extension $MODNAME..."
-    sed -i "s/^\;\(extension=${MODNAME}\)$/\1/" "$INI_PATH"
+    sed -i "s/^\;\(\(zend_\)\?extension=${MODNAME}.*\)$/\1/" "$INI_PATH"
   ;;
 
   2)
-    log "Incorrect ini file content. Trying to fix..."
-    echo -e "extension=$MODNAME\n" > "$INI_PATH"
+    log "Incorrect ini file content. Aborting..." RED
   ;;
 
   3)
@@ -222,7 +221,7 @@ dismod() {
    case $? in
      0)
       log "Trying to disable PHP extension $MODNAME..."
-      sed -i "s/^\(extension=${MODNAME}\)$/\;\1/" "$INI_PATH"
+      sed -i "s/^\(\(zend_\)\?extension=${MODNAME}.*\)$/\;\1/" "$INI_PATH"
     ;;
 
     1)
